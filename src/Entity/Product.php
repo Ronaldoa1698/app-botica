@@ -2,18 +2,19 @@
 
 namespace App\Entity;
 
-use App\Repository\ProductsRepository;
+use App\Repository\ProductRepository;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Bridge\Doctrine\Types\UuidType;
+use Symfony\Component\Uid\Uuid;
 
-#[ORM\Entity(repositoryClass: ProductsRepository::class)]
-class Products
+#[ORM\Entity(repositoryClass: ProductRepository::class)]
+class Product
 {
     #[ORM\Id]
-    #[ORM\Column(type: UuidType::NAME, unique: true)]
+    #[ORM\Column(type: 'string', unique: true)]
     #[ORM\GeneratedValue(strategy: 'CUSTOM')]
     #[ORM\CustomIdGenerator(class: 'doctrine.uuid_generator')]
-    private ?UuidType $id = null;
+    private ?string $id;
+
 
     #[ORM\Column(length: 255)]
     private ?string $name = null;
@@ -24,7 +25,7 @@ class Products
     #[ORM\Column]
     private ?float $price = null;
 
-    public function getId(): ?int
+    public function getId(): ?string
     {
         return $this->id;
     }
