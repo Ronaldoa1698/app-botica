@@ -4,6 +4,9 @@ namespace App\Service\Product;
 
 use App\Entity\Product;
 use Doctrine\ORM\EntityManagerInterface;
+use App\Form\Type\Product\CreateProductType;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 
 class CreateService
@@ -15,16 +18,25 @@ class CreateService
         $this->entityManager = $entityManager;
     }
 
-    public function createProduct(array $data): Product
+    public function createProduct(Request $request): Product
     {
-        $product = new Product();
-        $product->setName($data['name']);
-        $product->setCode($data['code']);
-        $product->setPrice($data['price']);
+        $data = json_decode($request->getContent(), true);
 
-        $this->entityManager->persist($product);
-        $this->entityManager->flush();
+        $form = $this->createForm(CreateProductType::class, new Product());
+        $form->submit($data);
 
-        return $product;
+        if ($form->isSubmitted() && $form->isValid()) {
+            $product = $form->getData();
+
+            $this->entityManager->persist($product);
+            $this->entityManager->flush();
+
+            return $product;
+        }
+
+        return $this->json([
+            'message' => 'Product not created',
+        ], 400);
     }
+
 }
