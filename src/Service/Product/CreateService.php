@@ -3,10 +3,9 @@
 namespace App\Service\Product;
 
 use App\Entity\Product;
+use App\Form\CreateProductType;
 use Doctrine\ORM\EntityManagerInterface;
-use App\Form\Type\Product\CreateProductType;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 
 
 class CreateService

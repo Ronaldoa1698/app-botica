@@ -1,9 +1,8 @@
 <?php
 
-namespace App\Form\Type\Product;
+namespace App\Form;
 
 use App\Entity\Product;
-use http\Message;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -12,6 +11,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Type;
 
+
 class CreateProductType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
@@ -19,28 +19,32 @@ class CreateProductType extends AbstractType
         $builder
             ->add('name', TextType::class, [
                 'constraints' => [
-                    new NotBlank(),
+                    new NotBlank([
+                        'message' => 'Name is required',
+                    ]),
                 ],
-                'required' => true,
             ])
             ->add('code', TextType::class, [
                 'constraints' => [
-                    new NotBlank(),
+                    new NotBlank([
+                        'message' => 'Code is required',
+                    ]),
                 ],
-                'required' => true,
-           ])
+            ])
             ->add('price', NumberType::class, [
                 'constraints' => [
-                    new NotBlank(),
-                    new Type(['type' => 'numeric']),
+                    new Type([
+                        'type' => 'float',
+                        'message' => 'Price must be a float',
+                    ]),
                 ],
-                'required' => true,
             ]);
     }
-    public function configureOptions(OptionsResolver $resolver): void
-    {
-        $resolver->setDefaults([
-            'data_class' => Product::class,
-        ]);
-    }
+
+    //public function configureOptions(OptionsResolver $resolver): void
+    //{
+    //    $resolver->setDefaults([
+    //        'data_class' => Product::class,
+    //    ]);
+    //}
 }
