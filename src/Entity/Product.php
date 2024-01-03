@@ -4,7 +4,6 @@ namespace App\Entity;
 
 use App\Repository\ProductRepository;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: ProductRepository::class)]
 class Product
@@ -16,15 +15,12 @@ class Product
     private ?string $id;
 
     #[ORM\Column(length: 255)]
-    #[Assert\NotBlank(message: 'The field "{{ field }}" is required.')]
     private ?string $name = null;
 
     #[ORM\Column(length: 255)]
-    #[Assert\NotBlank(message: 'The field "{{ field }}" is required.')]
     private ?string $code = null;
 
     #[ORM\Column]
-    #[Assert\NotBlank(message: 'The field "{{ field }}" is required.')]
     private ?float $price = null;
 
     public function getId(): ?string

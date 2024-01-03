@@ -9,8 +9,6 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\NotBlank;
-use Symfony\Component\Validator\Constraints\Type;
-
 
 class CreateProductType extends AbstractType
 {
@@ -18,6 +16,7 @@ class CreateProductType extends AbstractType
     {
         $builder
             ->add('name', TextType::class, [
+                'required' => true,
                 'constraints' => [
                     new NotBlank([
                         'message' => 'Name is required',
@@ -25,6 +24,7 @@ class CreateProductType extends AbstractType
                 ],
             ])
             ->add('code', TextType::class, [
+                'required' => true,
                 'constraints' => [
                     new NotBlank([
                         'message' => 'Code is required',
@@ -32,19 +32,19 @@ class CreateProductType extends AbstractType
                 ],
             ])
             ->add('price', NumberType::class, [
+                'required' => true,
                 'constraints' => [
-                    new Type([
-                        'type' => 'float',
-                        'message' => 'Price must be a float',
+                    new NotBlank([
+                        'message' => 'Price is required',
                     ]),
                 ],
             ]);
     }
 
-    //public function configureOptions(OptionsResolver $resolver): void
-    //{
-    //    $resolver->setDefaults([
-    //        'data_class' => Product::class,
-    //    ]);
-    //}
+    public function configureOptions(OptionsResolver $resolver): void
+    {
+        $resolver->setDefaults([
+            'data_class' => Product::class,
+        ]);
+    }
 }
