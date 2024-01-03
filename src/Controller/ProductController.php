@@ -3,20 +3,20 @@
 namespace App\Controller;
 
 use App\Entity\Product;
+use App\Form\CreateProductType;
 use App\Service\Product\DeleteService;
 use App\Service\Product\UpdateService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\HttpFoundation\Request;
-use App\Form\Type\Product\CreateProductType;
-use Symfony\Component\Validator\Validator\ValidatorInterface;
+
 
 class ProductController extends AbstractController
 {
     #[Route('/product', name: 'create', methods: ['POST'])]
-    public function createProduct(Request $request, EntityManagerInterface $entityManager, ValidatorInterface $validator): Response
+    public function createProduct(Request $request, EntityManagerInterface $entityManager): Response
     {
         $data = json_decode($request->getContent(), true);
 
