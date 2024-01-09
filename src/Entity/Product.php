@@ -4,6 +4,8 @@ namespace App\Entity;
 
 use App\Repository\ProductRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
+use App\Validator\CheckNameProduct;
 
 #[ORM\Entity(repositoryClass: ProductRepository::class)]
 class Product
@@ -15,6 +17,7 @@ class Product
     private ?string $id;
 
     #[ORM\Column(length: 255)]
+    #[Assert\CheckNameProduct()]
     private ?string $name = null;
 
     #[ORM\Column(length: 255)]

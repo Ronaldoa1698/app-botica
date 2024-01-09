@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Form;
+namespace App\Form\Type;
 
 use App\Entity\Product;
 use Symfony\Component\Form\AbstractType;
@@ -17,27 +17,12 @@ class CreateProductType extends AbstractType
         $builder
             ->add('name', TextType::class, [
                 'required' => true,
-                'constraints' => [
-                    new NotBlank([
-                        'message' => 'Name is required',
-                    ]),
-                ],
             ])
             ->add('code', TextType::class, [
                 'required' => true,
-                'constraints' => [
-                    new NotBlank([
-                        'message' => 'Code is required',
-                    ]),
-                ],
             ])
             ->add('price', NumberType::class, [
                 'required' => true,
-                'constraints' => [
-                    new NotBlank([
-                        'message' => 'Price is required',
-                    ]),
-                ],
             ]);
     }
 
