@@ -3,7 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Product;
-use App\Form\CreateProductType;
+use App\Form\Type\CreateProductType;
 use App\Service\Product\DeleteService;
 use App\Service\Product\UpdateService;
 use Doctrine\ORM\EntityManagerInterface;
