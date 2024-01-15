@@ -3,7 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Product;
-use App\Form\CreateProductType;
+use App\Form\Type\CreateProductType;
 use App\Service\Product\DeleteService;
 use App\Service\Product\UpdateService;
 use Doctrine\ORM\EntityManagerInterface;
@@ -11,21 +11,21 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 
+#[Route('/products', name: 'product_')]
 class ProductController extends AbstractController
 {
-    #[Route('/product', name: 'create', methods: ['POST'])]
-    public function createProduct(Request $request, EntityManagerInterface $entityManager): Response
+    #[Route('/create', name: 'create', methods: ['POST'])]
+    public function createProduct(Request $request, EntityManagerInterface $entityManager): JsonResponse
     {
         $data = json_decode($request->getContent(), true);
-
-        $form = $this->createForm(CreateProductType::class, new Product());
+        $product = new Product();
+        $form = $this->createForm(CreateProductType::class, $product);
         $form->submit($data);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $product = $form->getData();
-
+        if ($form->isValid() && $form->isSubmitted()) {
             $entityManager->persist($product);
             $entityManager->flush();
 
@@ -38,8 +38,8 @@ class ProductController extends AbstractController
         }
 
         return $this->json([
-            'message' => 'Product not created',
-        ], 400);
+            'errors' => $form->getErrors(true, true),
+        ], Response::HTTP_BAD_REQUEST);
     }
 
     #[Route('/products/{id}', name: 'update', methods: ['PUT'])]
