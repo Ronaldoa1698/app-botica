@@ -8,6 +8,7 @@ use App\Service\Product\DeleteService;
 use App\Service\Product\UpdateService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -18,28 +19,30 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 class ProductController extends AbstractController
 {
     #[Route('/create', name: 'create', methods: ['POST'])]
-    public function createProduct(Request $request, EntityManagerInterface $entityManager): JsonResponse
+    public function createProduct(Request $request, EntityManagerInterface $entityManager): Response
     {
-        $data = json_decode($request->getContent(), true);
-        $product = new Product();
-        $form = $this->createForm(CreateProductType::class, $product);
-        $form->submit($data);
+        $form = $this->createForm(CreateProductType::class);
+        $form->submit(json_decode($request->getContent(), true));
 
-        if ($form->isValid() && $form->isSubmitted()) {
-            $entityManager->persist($product);
-            $entityManager->flush();
-
+        if (!$form->isValid() && $form->isSubmitted()) {
+            foreach ($form->getErrors(true) as $error) {
+                $errors[] = $error->getMessage();
+            }
             return $this->json([
-                'id' => $product->getId(),
-                'name' => $product->getName(),
-                'code' => $product->getCode(),
-                'price' => $product->getPrice(),
-            ]);
+                'errors' => $errors,
+            ], 422);
         }
 
+        $product = $form->getData();
+        $entityManager->persist($product);
+        $entityManager->flush();
+
         return $this->json([
-            'errors' => $form->getErrors(true, true),
-        ], Response::HTTP_BAD_REQUEST);
+            'id' => $product->getId(),
+            'name' => $product->getName(),
+            'code' => $product->getCode(),
+            'price' => $product->getPrice(),
+        ]);
     }
 
     #[Route('/products/{id}', name: 'update', methods: ['PUT'])]

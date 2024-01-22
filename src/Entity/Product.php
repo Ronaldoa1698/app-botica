@@ -16,19 +16,15 @@ class Product
     private ?string $id;
 
     #[ORM\Column(length: 255)]
-    #[Assert\NotBlank(message: 'Name is required')]
     private ?string $name = null;
 
     #[ORM\Column(length: 255)]
-    #[Assert\NotBlank(message: 'Code is required')]
     private ?string $code = null;
 
     #[ORM\Column]
-    #[Assert\NotBlank(message: 'Price is required')]
     private ?float $price = null;
 
     #[ORM\Column(type: 'integer')]
-    #[Assert\PositiveOrZero(message: 'Stock must be positive or zero')]
     private ?int $stock = null;
 
     public function getId(): ?string
